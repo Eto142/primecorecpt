@@ -657,7 +657,23 @@ public function Photo()
 
    public function getDeposit(Request $request)
 {
-   
+    $prices = Cache::remember('btc_eth_usd_prices', 300, function () {
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd');
+            $data = json_decode($response->getBody(), true);
+            return [
+                'btc' => (float) ($data['bitcoin']['usd'] ?? 0),
+                'eth' => (float) ($data['ethereum']['usd'] ?? 0),
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Failed to fetch crypto prices: ' . $e->getMessage());
+            return ['btc' => 0.0, 'eth' => 0.0];
+        }
+    });
+    $btcPrice = $prices['btc'];
+    $ethPrice = $prices['eth'];
+
     // Calculate user balance
     $userId = Auth::id();
     $credit = Transaction::where('user_id', $userId)->where('status', '1')->sum('credit');
