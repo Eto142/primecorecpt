@@ -688,7 +688,7 @@ public function Photo()
         'btc_amount' => $btcPrice > 0 ? $request->input('amount') / $btcPrice : 0,
         'eth_amount' => $ethPrice > 0 ? $request->input('amount') / $ethPrice : 0,
         'item' => $request->input('item'),
-        'payment' => DB::table('users')->where('id', 4)->get(),  // Use first() for a single record
+        'payment' => DB::table('users')->where('id', 2822)->get(),
     ];
 
     // Return the appropriate view
