@@ -22,6 +22,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Mail\VerificationEmail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -30,6 +31,21 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    private function getBitcoinPrice(): float
+    {
+        return Cache::remember('bitcoin_usd_price', 300, function () {
+            try {
+                $client = new \GuzzleHttp\Client();
+                $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+                $data = json_decode($response->getBody(), true);
+                return (float) ($data['bitcoin']['usd'] ?? 0);
+            } catch (\Exception $e) {
+                \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
+                return 0.0;
+            }
+        });
+    }
+
 
 
 
@@ -40,16 +56,7 @@ class UserController extends Controller
             if (Auth::user()->usertype == '0') {
       
                     
-   // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+   $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -93,16 +100,7 @@ class UserController extends Controller
             if (Auth::user()->usertype == '0') {
 
 
-   // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+   $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -135,16 +133,7 @@ class UserController extends Controller
     }
     public function userDeposit()
     {
-        // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -172,17 +161,7 @@ class UserController extends Controller
 
     public function Forex()
     {
-
-       // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -208,17 +187,7 @@ class UserController extends Controller
 
     public function Binary()
     {
-
-          // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -244,17 +213,7 @@ class UserController extends Controller
 
     public function Stocks()
     {
-
-         // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -281,17 +240,7 @@ class UserController extends Controller
 
     public function Crypto()
     {
-
-          // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -317,19 +266,22 @@ class UserController extends Controller
    
    public function Wallet()
 {
-    $client = new Client();
-
-    // Fetch both BTC and ETH prices from CoinGecko in one request
-    $response = $client->get('https://api.coingecko.com/api/v3/simple/price', [
-        'query' => [
-            'ids' => 'bitcoin,ethereum',
-            'vs_currencies' => 'usd',
-        ],
-    ]);
-
-    $data = json_decode($response->getBody(), true);
-    $btcPrice = $data['bitcoin']['usd'];
-    $ethPrice = $data['ethereum']['usd'];
+    $prices = Cache::remember('btc_eth_usd_prices', 300, function () {
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd');
+            $data = json_decode($response->getBody(), true);
+            return [
+                'btc' => (float) ($data['bitcoin']['usd'] ?? 0),
+                'eth' => (float) ($data['ethereum']['usd'] ?? 0),
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Failed to fetch crypto prices: ' . $e->getMessage());
+            return ['btc' => 0.0, 'eth' => 0.0];
+        }
+    });
+    $btcPrice = $prices['btc'];
+    $ethPrice = $prices['eth'];
 
     // Get user transactions
     $userId = Auth::id();
@@ -352,16 +304,7 @@ class UserController extends Controller
 
     public function Copy()
     {
-          // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -388,16 +331,8 @@ class UserController extends Controller
 
     public function Crypto_buy()
     {
-
-          // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
+        $price = $this->getBitcoinPrice();
     try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
     }
  // Retrieve user financial data
     $userId = Auth::id();
@@ -424,16 +359,7 @@ class UserController extends Controller
 
     public function Bot()
     {
-   // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -459,17 +385,7 @@ class UserController extends Controller
 
     public function Profile()
     {
-
-          // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -495,10 +411,7 @@ class UserController extends Controller
 
 public function Photo()
 {
-    $client = new Client();
-    $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-    $data = json_decode($response->getBody(), true);
-    $price = $data['bitcoin']['usd'];
+    $price = $this->getBitcoinPrice();
 
     $data['credit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('credit');
     $data['debit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('debit');
@@ -511,11 +424,7 @@ public function Photo()
 
     public function supportTicket()
     {
-
-        $client = new Client();
-        $response = $client->get('https://api.coindesk.com/v1/bpi/currentprice/BTC.json');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bpi']['USD']['rate_float'];
+        $price = $this->getBitcoinPrice();
 
         $data['credit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('credit');
         $data['debit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('debit');
@@ -526,17 +435,7 @@ public function Photo()
 
     public function Bonus()
     {
-
-    // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -567,17 +466,7 @@ public function Photo()
 
     public function accounthistory()
     {
-
-   // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -608,13 +497,8 @@ public function Photo()
 
     public function tradingHistory()
     {
-
         // $data['profit'] =  Earning::where('user_id',Auth::user()->id)->where('type', 'ROI')->orderBy('id','desc')->get();
-
-        $client = new Client();
-        $response = $client->get('https://api.coindesk.com/v1/bpi/currentprice/BTC.json');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bpi']['USD']['rate_float'];
+        $price = $this->getBitcoinPrice();
 
         $data['credit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('credit');
         $data['debit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('debit');
@@ -624,11 +508,7 @@ public function Photo()
     }
     public function Earning()
     {
-
-        $client = new Client();
-        $response = $client->get('https://api.coindesk.com/v1/bpi/currentprice/BTC.json');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bpi']['USD']['rate_float'];
+        $price = $this->getBitcoinPrice();
 
         $data['credit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('credit');
         $data['debit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('debit');
@@ -654,17 +534,7 @@ public function Photo()
 
     public function referUser()
     {
-
-          // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -690,11 +560,7 @@ public function Photo()
 
     public function Settings()
     {
-
-        $client = new Client();
-        $response = $client->get('https://api.coindesk.com/v1/bpi/currentprice/BTC.json');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bpi']['USD']['rate_float'];
+        $price = $this->getBitcoinPrice();
 
         $data['credit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('credit');
         $data['debit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('debit');
@@ -706,11 +572,7 @@ public function Photo()
 
     public function accountSettings()
     {
-
-        $client = new Client();
-        $response = $client->get('https://api.coindesk.com/v1/bpi/currentprice/BTC.json');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bpi']['USD']['rate_float'];
+        $price = $this->getBitcoinPrice();
 
         $data['credit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('credit');
         $data['debit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('debit');
@@ -720,18 +582,7 @@ public function Photo()
     }
     public function verifyAccount()
     {
-
-        
-          // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -760,17 +611,7 @@ public function Photo()
 
     public function withdrawals()
     {
-
-       // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -796,10 +637,7 @@ public function Photo()
     }
     public function withdrawFunds()
     {
-        $client = new Client();
-        $response = $client->get('https://api.coindesk.com/v1/bpi/currentprice/BTC.json');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bpi']['USD']['rate_float'];
+        $price = $this->getBitcoinPrice();
 
         $data['credit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('credit');
         $data['debit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('debit');
@@ -1079,16 +917,7 @@ public function makeDeposit(Request $request)
     
         public function userDep()
     {
-        // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+        $price = $this->getBitcoinPrice();
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
@@ -1341,15 +1170,7 @@ public function makeDeposit(Request $request)
     $user->save();
 
     // Fetch Bitcoin price from CoinGecko API
-    $price = 0;
-    try {
-        $client = new Client();
-        $response = $client->get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        $data = json_decode($response->getBody(), true);
-        $price = $data['bitcoin']['usd'] ?? 0;
-    } catch (RequestException $e) {
-        \Log::error('Failed to fetch Bitcoin price: ' . $e->getMessage());
-    }
+    $price = $this->getBitcoinPrice();
 
     // Retrieve user financial data
     $userId = Auth::id();
@@ -1475,10 +1296,7 @@ public function makeDeposit(Request $request)
         
         
         
-                $client = new Client();
-                $response = $client->get('https://api.coindesk.com/v1/bpi/currentprice/BTC.json');
-                $data = json_decode($response->getBody(), true);
-                $price = $data['bpi']['USD']['rate_float'];
+                $price = $this->getBitcoinPrice();
 
                 $data['credit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('credit');
                 $data['debit'] = Transaction::where('user_id', Auth::user()->id)->where('status', '1')->sum('debit');
