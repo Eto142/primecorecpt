@@ -56,7 +56,7 @@
   </style>
 </head>
 
-<!-- Smartsupp Live Chat script --> <script type="text/javascript"> var _smartsupp = _smartsupp || {}; _smartsupp.key = 'c93031517dbf2a336e66dc8a35151471e78bd354'; window.smartsupp||(function(d) { var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[]; s=d.getElementsByTagName('script')[0];c=d.createElement('script'); c.type='text/javascript';c.charset='utf-8';c.async=true; c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s); })(document); </script>
+<!-- Smartsupp Live Chat script --> 
 
 <body onload="show()" class="nk-body npc-crypto bg-white has-sidebar ">
 
@@ -542,7 +542,7 @@
                    <li class="nk-menu-item">
                     <a href="{{url('bot')}}" class="nk-menu-link">
                       <span class="nk-menu-icon"><em class="icon ni ni-growth"></em></span>
-                      <span class="nk-menu-text">QAI PROTECT</span>
+                      <span class="nk-menu-text">PCCPT PROTECT</span>
                     </a>
                   </li>
                   <li class="nk-menu-item">
