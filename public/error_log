@@ -1,0 +1,17 @@
+[18-Jun-2025 08:12:58 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "_DIR_" in /home/opzawqkqlc/public_html/quintessence/index.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/opzawqkqlc/public_html/quintessence/index.php on line 12
+[18-Jun-2025 08:13:08 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "_DIR_" in /home/opzawqkqlc/public_html/quintessence/index.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/opzawqkqlc/public_html/quintessence/index.php on line 12
+[18-Jun-2025 08:14:18 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "_DIR_" in /home/opzawqkqlc/public_html/quintessence/index.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/opzawqkqlc/public_html/quintessence/index.php on line 12
+[18-Jun-2025 08:17:08 UTC] PHP Fatal error:  Uncaught BadMethodCallException: Method Illuminate\Foundation\Application::handleRequest does not exist. in /home/opzawqkqlc/PrimeCore Capitals.net/vendor/laravel/framework/src/Illuminate/Macroable/Traits/Macroable.php:112
+Stack trace:
+#0 /home/opzawqkqlc/public_html/quintessence/index.php(22): Illuminate\Foundation\Application->__call()
+#1 {main}
+  thrown in /home/opzawqkqlc/PrimeCore Capitals.net/vendor/laravel/framework/src/Illuminate/Macroable/Traits/Macroable.php on line 112
