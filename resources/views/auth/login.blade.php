@@ -41,12 +41,14 @@
   <div id="particles-bg" class="particles-container particles-bg"></div>
   </div>
   <div class="register-box">
-    <div class="register-logo" style="margin-bottom: 1px;">
+    
+
+    <div class="register-box-body">
+
+      <div class="register-logo" style="margin-bottom: 1px;">
       <a href="/"><img src="io.png" class="img-responsive"></a>
 
     </div>
-
-    <div class="register-box-body">
       <h3 class="login-box-msg"> Sign-In</h3>
       <p class="login-box-msg">
       <p>Access the PrimeCore Capitals panel using your email and password</p>
