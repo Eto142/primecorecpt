@@ -332,8 +332,6 @@ class UserController extends Controller
     public function Crypto_buy()
     {
         $price = $this->getBitcoinPrice();
-    try {
-    }
  // Retrieve user financial data
     $userId = Auth::id();
     $data = [
