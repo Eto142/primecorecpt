@@ -55,6 +55,10 @@
     }
   </style>
 
+
+
+</head>
+
 <!-- Smartsupp Live Chat script -->
 <script type="text/javascript">
 var _smartsupp = _smartsupp || {};
@@ -67,7 +71,7 @@ window.smartsupp||(function(d) {
 })(document);
 </script>
 <noscript>Powered by <a href="https://www.smartsupp.com" target="_blank">Smartsupp</a></noscript>
-</head>
+
 
 <body onload="show()" class="nk-body npc-crypto bg-white has-sidebar ">
 

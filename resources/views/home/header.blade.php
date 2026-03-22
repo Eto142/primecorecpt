@@ -556,6 +556,7 @@ border: 1px solid #617AD0;
 <link rel="preload" href="../js.cdn.com/vendor-modern.707b8462.js" as="script" />
 <link rel="preload" href="../js.cdn.com/app-modern.c15a5f24.js" as="script" />
 <link rel="preload" href="../js.cdn.com/launcher-discovery-modern.7088be9d.js" as="script" />
+</head>
 
 <!-- Smartsupp Live Chat script -->
 <script type="text/javascript">
@@ -569,7 +570,7 @@ window.smartsupp||(function(d) {
 })(document);
 </script>
 <noscript>Powered by <a href="https://www.smartsupp.com" target="_blank">Smartsupp</a></noscript>
-</head>
+
 <body class="home page-template page-template-templates page-template-template-flexible page-template-templatestemplate-flexible-php page page-id-28653968 page-parent exclusive-addons-elementor elementor-default elementor-kit-28690895">
 <script data-cfasync="false" data-no-defer="1" data-no-minify="1" data-no-optimize="1">if(typeof ewww_webp_supported==="undefined"){var ewww_webp_supported=!1}if(ewww_webp_supported){document.body.classList.add("webp-support")}</script>
 
